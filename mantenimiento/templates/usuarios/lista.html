@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Gestión de Técnicos y Personal{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <a href="{% url 'usuario_crear' %}" class="btn btn-primary">
+        <i class="fa-solid fa-user-plus"></i> Nuevo Técnico / Usuario
+    </a>
+</div>
+
+<div class="card">
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Nombre y Apellido</th>
+                    <th>Email</th>
+                    <th>Rol / Acceso</th>
+                    <th>Estado</th>
+                    <th style="text-align: right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <td><strong>{{ u.username }}</strong></td>
+                    <td>{{ u.first_name }} {{ u.last_name }}</td>
+                    <td>{{ u.email|default:"-" }}</td>
+                    <td>
+                        {% if u.is_superuser %}
+                            <span class="badge info">Super Admin</span>
+                        {% elif u.is_staff %}
+                            <span class="badge success">Staff</span>
+                        {% else %}
+                            <span class="badge warning">Técnico (Solo Móvil)</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if u.is_active %}
+                            <span style="color: var(--color-success);"><i class="fa-solid fa-circle-check"></i> Activo</span>
+                        {% else %}
+                            <span style="color: var(--color-danger);"><i class="fa-solid fa-circle-xmark"></i> Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: right; display: flex; gap: 0.5rem; justify-content: flex-end;">
+                        <a href="{% url 'usuario_editar' u.id %}" class="btn" style="padding: 0.4rem 0.6rem; font-size: 0.85rem; background: #e2e8f0; color: var(--color-primary-dark);" title="Editar Técnico">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+                        {% if not u.is_superuser or request.user == u %}
+                        <a href="{% url 'usuario_eliminar' u.id %}" class="btn" style="padding: 0.4rem 0.6rem; font-size: 0.85rem; background: hsla(0, 84%, 60%, 0.1); color: var(--color-danger);" title="Eliminar Técnico">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

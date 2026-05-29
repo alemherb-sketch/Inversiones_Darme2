@@ -1,0 +1,179 @@
+@import 'variables.css';
+
+/* Mobile Native App Reset */
+body.mobile-app {
+    font-family: var(--font-family);
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    display: block; /* override desktop flex */
+    min-height: 100vh;
+}
+
+/* Mobile Header */
+.mobile-header {
+    background-color: var(--color-primary-dark);
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow-md);
+}
+
+.mobile-header h1 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.mobile-header a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem;
+}
+
+/* Mobile Container */
+.mobile-container {
+    padding: 1rem;
+    padding-bottom: 5rem; /* space for bottom nav or just breathing room */
+}
+
+/* Mobile Cards */
+.mobile-card {
+    background: var(--bg-surface);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--glass-border);
+}
+
+.mobile-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-primary);
+}
+
+/* Touch-friendly Buttons */
+.btn-mobile {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    border: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-bottom: 1rem;
+}
+
+.btn-mobile.primary { background-color: var(--color-primary); color: white; }
+.btn-mobile.accent { background-color: var(--color-accent); color: white; }
+.btn-mobile.success { background-color: var(--color-success); color: white; }
+
+/* Custom Checkbox (Toggle Switch style for mobile) */
+.toggle-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.toggle-item:last-child {
+    border-bottom: none;
+}
+
+.toggle-label {
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+/* iOS style switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+}
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: var(--color-success);
+}
+input:checked + .slider:before {
+    transform: translateX(22px);
+}
+
+/* Mobile Inputs */
+.mobile-input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    background: var(--bg-surface);
+}
+
+/* Add Parts Section */
+.add-part-row {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    align-items: center;
+}
+.add-part-row select {
+    flex-grow: 1;
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid #ddd;
+}
+.add-part-row input[type="number"] {
+    width: 80px;
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.mobile-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+    float: right;
+}

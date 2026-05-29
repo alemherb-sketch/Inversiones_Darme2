@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Inversiones Darme{% endblock %}
+{% block page_title %}Panel de Control{% endblock %}
+
+{% block content %}
+<div class="dashboard-grid">
+    <div class="card kpi-card">
+        <div class="kpi-icon primary">
+            <i class="fa-solid fa-truck"></i>
+        </div>
+        <div class="kpi-info">
+            <h3>{{ vehiculos_total }}</h3>
+            <p>Vehículos en Flota</p>
+        </div>
+    </div>
+    
+    <div class="card kpi-card">
+        <div class="kpi-icon warning">
+            <i class="fa-solid fa-screwdriver-wrench"></i>
+        </div>
+        <div class="kpi-info">
+            <h3>{{ vehiculos_mantenimiento }}</h3>
+            <p>En Mantenimiento</p>
+        </div>
+    </div>
+
+    <div class="card kpi-card">
+        <div class="kpi-icon accent">
+            <i class="fa-solid fa-clipboard-list"></i>
+        </div>
+        <div class="kpi-info">
+            <h3>{{ ordenes_pendientes }}</h3>
+            <p>Órdenes Pendientes</p>
+        </div>
+    </div>
+
+    <div class="card kpi-card">
+        <div class="kpi-icon success">
+            <i class="fa-solid fa-money-bill-wave"></i>
+        </div>
+        <div class="kpi-info">
+            <h3>S/ {{ compras_mes|floatformat:2 }}</h3>
+            <p>Gastos del Mes</p>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid" style="grid-template-columns: 2fr 1fr;">
+    <!-- Alertas Preventivas -->
+    <div class="card">
+        <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: var(--color-danger);">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Alertas Preventivas Activas
+        </h3>
+        
+        {% if alertas_activas %}
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Vehículo</th>
+                        <th>Alerta</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for alerta in alertas_activas %}
+                    <tr>
+                        <td><strong>{{ alerta.vehiculo.numero_economico }}</strong> ({{ alerta.vehiculo.tipo }})</td>
+                        <td>{{ alerta.tipo_alerta }}</td>
+                        <td>
+                            <a href="{% url 'orden_crear' %}?vehiculo={{ alerta.vehiculo.id }}&tipo=PREVENTIVO" class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+                                Crear OT
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted">No hay mantenimientos preventivos urgentes en este momento.</p>
+        {% endif %}
+    </div>
+
+    <!-- Chart -->
+    <div class="card">
+        <h3 style="margin-bottom: 1.5rem;">Distribución de Mantenimiento</h3>
+        <canvas id="tiposChart" style="max-height: 250px;"></canvas>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const ctx = document.getElementById('tiposChart').getContext('2d');
+    const tiposChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: {{ tipos_labels|safe }},
+            datasets: [{
+                data: {{ tipos_data|safe }},
+                backgroundColor: [
+                    'hsl(142, 71%, 45%)', // Verde Preventivo
+                    'hsl(35, 92%, 50%)',  // Naranja Correctivo
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block page_title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 800px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="dashboard-grid" style="grid-template-columns: 1fr 1fr;">
+            <!-- Render fields manually or generic -->
+            {% for field in form %}
+                <div class="form-group" {% if field.name == 'descripcion' or field.name == 'documento_adjunto' %}style="grid-column: 1 / -1;"{% endif %}>
+                    <label class="form-label">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="text-muted">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% if field.errors %}
+                        <div style="color: var(--color-danger); font-size: 0.85rem; margin-top: 0.25rem;">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div style="margin-top: 2rem; border-top: 1px solid var(--glass-border); padding-top: 1.5rem; display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i> Guardar
+            </button>
+            <a href="javascript:history.back()" class="btn" style="background: #eee; color: #333;">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

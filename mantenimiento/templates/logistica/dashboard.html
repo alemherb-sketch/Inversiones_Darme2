@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Almacén y Logística{% endblock %}
+
+{% block content %}
+<div class="kpi-container" style="margin-bottom: 2rem;">
+    <div class="kpi-card">
+        <div class="kpi-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+        <div class="kpi-info">
+            <h3>{{ total_repuestos }}</h3>
+            <p>TIPO DE REPUESTOS EN CATÁLOGO</p>
+        </div>
+    </div>
+    
+    <div class="kpi-card">
+        <div class="kpi-icon" style="background: hsla(0, 84%, 60%, 0.1); color: var(--color-danger);"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="kpi-info">
+            <h3 style="color: var(--color-danger);">{{ bajo_stock }}</h3>
+            <p>REPUESTOS BAJO STOCK MÍNIMO</p>
+        </div>
+    </div>
+</div>
+
+<div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+    <a href="{% url 'repuesto_lista' %}" class="btn btn-primary" style="flex: 1; text-align: center; padding: 1.5rem; font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+        <i class="fa-solid fa-box-open" style="font-size: 2rem;"></i>
+        Inventario Físico (Repuestos)
+    </a>
+    
+    <a href="{% url 'kardex_lista' %}" class="btn" style="flex: 1; text-align: center; padding: 1.5rem; font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; background: var(--bg-card); color: var(--text-primary); border: 2px solid var(--border-color);">
+        <i class="fa-solid fa-clock-rotate-left" style="font-size: 2rem; color: var(--color-primary);"></i>
+        Historial de Movimientos (Kardex)
+    </a>
+
+    <a href="{% url 'movimiento_manual' %}" class="btn" style="flex: 1; text-align: center; padding: 1.5rem; font-size: 1.1rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; background: var(--bg-card); color: var(--text-primary); border: 2px solid var(--border-color);">
+        <i class="fa-solid fa-arrow-right-arrow-left" style="font-size: 2rem; color: var(--color-warning);"></i>
+        Registro Manual (Ajustes)
+    </a>
+</div>
+
+<div class="card">
+    <h3 style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color);">
+        <i class="fa-solid fa-bolt"></i> Últimos 10 Movimientos de Inventario
+    </h3>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Tipo</th>
+                    <th>Repuesto</th>
+                    <th>Cantidad</th>
+                    <th>Origen / Destino</th>
+                    <th>Usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for mov in ultimos_movimientos %}
+                <tr>
+                    <td>{{ mov.fecha|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        {% if mov.tipo_movimiento == 'ENTRADA' %}
+                            <span class="badge success"><i class="fa-solid fa-arrow-down"></i> Entrada</span>
+                        {% elif mov.tipo_movimiento == 'SALIDA' %}
+                            <span class="badge warning"><i class="fa-solid fa-arrow-up"></i> Salida</span>
+                        {% else %}
+                            <span class="badge info"><i class="fa-solid fa-scale-balanced"></i> Ajuste</span>
+                        {% endif %}
+                    </td>
+                    <td><strong>{{ mov.repuesto.nombre }}</strong> <br><small class="text-muted">{{ mov.repuesto.codigo }}</small></td>
+                    <td>
+                        {% if mov.tipo_movimiento == 'ENTRADA' %}
+                            <span style="color: var(--color-success); font-weight: bold;">+{{ mov.cantidad }}</span>
+                        {% elif mov.tipo_movimiento == 'SALIDA' %}
+                            <span style="color: var(--color-warning); font-weight: bold;">-{{ mov.cantidad }}</span>
+                        {% else %}
+                            <strong>{{ mov.cantidad }}</strong>
+                        {% endif %}
+                    </td>
+                    <td>{{ mov.origen_destino }}</td>
+                    <td>{{ mov.usuario.username|default:"Sistema" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-muted);">No hay movimientos registrados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

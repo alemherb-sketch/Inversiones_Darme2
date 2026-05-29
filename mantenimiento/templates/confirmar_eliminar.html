@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block page_title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto; text-align: center; padding: 3rem 2rem;">
+    <div style="font-size: 4rem; color: var(--color-danger); margin-bottom: 1.5rem;">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+    </div>
+    <h2 style="margin-bottom: 1rem;">¿Estás seguro?</h2>
+    <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem;">
+        Estás a punto de eliminar el siguiente registro de forma permanente:<br>
+        <strong style="color: var(--text-main); font-size: 1.2rem; display: block; margin-top: 0.5rem;">{{ objeto }}</strong>
+    </p>
+
+    <form method="post" style="display: flex; gap: 1rem; justify-content: center;">
+        {% csrf_token %}
+        <button type="submit" class="btn" style="background-color: var(--color-danger); color: white; padding: 0.75rem 2rem;">
+            <i class="fa-solid fa-trash"></i> Sí, Eliminar
+        </button>
+        <a href="{% url url_cancelar %}" class="btn" style="background: #e2e8f0; color: var(--text-main); padding: 0.75rem 2rem;">
+            Cancelar
+        </a>
+    </form>
+</div>
+{% endblock %}

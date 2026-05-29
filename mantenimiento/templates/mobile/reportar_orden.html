@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Reportar OT-{{ orden.codigo }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/mobile.css">
+</head>
+<body class="mobile-app">
+    <header class="mobile-header">
+        <a href="{% url 'mobile_mis_ordenes' %}"><i class="fa-solid fa-chevron-left"></i> Volver</a>
+        <h1>OT-{{ orden.codigo }}</h1>
+        <div style="width: 24px;"></div>
+    </header>
+
+    <div class="mobile-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div style="background: var(--color-success); color: white; padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1rem; font-weight: 600;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" id="reportForm">
+            {% csrf_token %}
+            
+            <div class="mobile-card">
+                <h2 class="mobile-card-title"><i class="fa-solid fa-clipboard-check"></i> Checklist de Inspección</h2>
+                
+                {% for field in checklist %}
+                    {% if field.name != 'observaciones' %}
+                    <div class="toggle-item">
+                        <span class="toggle-label">{{ field.label }}</span>
+                        <label class="switch">
+                            {{ field }}
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+                
+                <div style="margin-top: 1rem;">
+                    <label style="font-weight: 500;">Observaciones del Checklist:</label>
+                    <textarea name="{{ checklist.observaciones.html_name }}" class="mobile-input" rows="2">{{ checklist.observaciones.value|default_if_none:"" }}</textarea>
+                </div>
+            </div>
+
+            <div class="mobile-card">
+                <h2 class="mobile-card-title"><i class="fa-solid fa-screwdriver-wrench"></i> Repuestos Utilizados</h2>
+                
+                <!-- Repuestos ya usados (solo vista) -->
+                {% if orden.repuestos_usados.exists %}
+                <div style="margin-bottom: 1rem; padding: 0.5rem; background: #f9f9f9; border-radius: var(--radius-sm);">
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 600;">YA REGISTRADOS:</p>
+                    {% for ru in orden.repuestos_usados.all %}
+                        <div style="font-size: 0.9rem; padding: 0.25rem 0;">• {{ ru.cantidad }}x {{ ru.repuesto.nombre }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Agregar nuevos repuestos -->
+                <div id="partsContainer">
+                    <div class="add-part-row">
+                        <select name="repuesto_id_1" class="mobile-input" style="margin-top: 0;" onchange="toggleRequired(this, 'cantidad_1')">
+                            <option value="">Seleccionar Repuesto...</option>
+                            {% for repuesto in repuestos_disponibles %}
+                                <option value="{{ repuesto.id }}">{{ repuesto.nombre }} (Stock: {{ repuesto.stock }})</option>
+                            {% endfor %}
+                        </select>
+                        <input type="number" name="cantidad_1" placeholder="Cant" min="1" class="mobile-input" style="margin-top: 0;">
+                    </div>
+                </div>
+                
+                <button type="button" class="btn-mobile" style="background: #eee; color: #333; padding: 0.5rem; font-size: 1rem;" onclick="addPartRow()">
+                    <i class="fa-solid fa-plus"></i> Añadir Otro Repuesto
+                </button>
+            </div>
+
+            <div class="mobile-card">
+                <h2 class="mobile-card-title"><i class="fa-solid fa-file-signature"></i> Reporte de Trabajo</h2>
+                <div style="margin-bottom: 1rem;">
+                    <label style="font-weight: 500;">Trabajos Realizados:</label>
+                    <textarea name="reporte_trabajos" class="mobile-input" rows="3" required placeholder="Describe las reparaciones hechas...">{{ orden.reporte_trabajos|default_if_none:"" }}</textarea>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <label style="font-weight: 500; font-size: 0.85rem;">Horómetro:</label>
+                        <input type="number" step="0.1" name="horometro_registro" class="mobile-input" value="{{ horometro_str }}" placeholder="Ej: {{ horometro_actual_str }}" required>
+                    </div>
+                    <div>
+                        <label style="font-weight: 500; font-size: 0.85rem;">Odómetro:</label>
+                        <input type="number" step="0.1" name="odometro_registro" class="mobile-input" value="{{ odometro_str }}" placeholder="Ej: {{ odometro_actual_str }}">
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <label style="font-weight: 500;">Tiempo Invertido (Horas):</label>
+                    <input type="number" step="0.5" name="tiempo_trabajado" class="mobile-input" value="{{ tiempo_str }}" placeholder="Ej: 2.5" required>
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <label style="font-weight: 500;">Estado de la Orden:</label>
+                    <select name="estado" class="mobile-input">
+                        {% for value, label in estados %}
+                            <option value="{{ value }}" {% if orden.estado == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem;">
+                <button type="submit" name="accion" value="guardar" class="btn-mobile primary" style="padding: 1.25rem; flex: 1;">
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar Progreso
+                </button>
+                <button type="submit" name="accion" value="completar" class="btn-mobile" style="padding: 1.25rem; flex: 1; background: var(--color-success); color: white; border: none;" onclick="return confirm('¿Seguro que deseas marcar esta orden como COMPLETADA?');">
+                    <i class="fa-solid fa-check-double"></i> COMPLETAR ORDEN
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        let partRowCounter = 1;
+
+        function toggleRequired(selectElem, inputName) {
+            const inputElem = document.querySelector(`input[name="${inputName}"]`);
+            if (inputElem) {
+                if (selectElem.value !== "") {
+                    inputElem.setAttribute("required", "required");
+                } else {
+                    inputElem.removeAttribute("required");
+                }
+            }
+        }
+
+        function addPartRow() {
+            partRowCounter++;
+            const container = document.getElementById('partsContainer');
+            const row = document.createElement('div');
+            row.className = 'add-part-row';
+            row.innerHTML = `
+                <select name="repuesto_id_${partRowCounter}" class="mobile-input" style="margin-top: 0;" onchange="toggleRequired(this, 'cantidad_${partRowCounter}')">
+                    <option value="">Seleccionar Repuesto...</option>
+                    {% for repuesto in repuestos_disponibles %}
+                        <option value="{{ repuesto.id }}">{{ repuesto.nombre }} (Stock: {{ repuesto.stock }})</option>
+                    {% endfor %}
+                </select>
+                <input type="number" name="cantidad_${partRowCounter}" placeholder="Cant" min="1" class="mobile-input" style="margin-top: 0;">
+            `;
+            container.appendChild(row);
+        }
+    </script>
+</body>
+</html>

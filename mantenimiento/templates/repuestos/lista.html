@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Inventario de Repuestos{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <a href="{% url 'repuesto_crear' %}" class="btn btn-primary">
+        <i class="fa-solid fa-plus"></i> Registrar Nuevo Repuesto
+    </a>
+</div>
+
+<div class="card">
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Descripción</th>
+                    <th>Categoría</th>
+                    <th>Stock Actual</th>
+                    <th>Precio (S/)</th>
+                    <th style="text-align: right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in repuestos %}
+                <tr>
+                    <td><strong>{{ r.codigo }}</strong></td>
+                    <td>
+                        {{ r.nombre }}
+                        {% if r.marca %}
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Marca: {{ r.marca }}</div>
+                        {% endif %}
+                    </td>
+                    <td>{{ r.categoria|default:"-" }}</td>
+                    <td>
+                        {% if r.stock <= r.stock_minimo %}
+                            <span class="badge" style="background: hsla(0, 84%, 60%, 0.1); color: var(--color-danger); border: 1px solid var(--color-danger);"><i class="fa-solid fa-triangle-exclamation"></i> {{ r.stock }} {{ r.unidad_medida }}</span>
+                        {% else %}
+                            <span class="badge success">{{ r.stock }} {{ r.unidad_medida }}</span>
+                        {% endif %}
+                    </td>
+                    <td>S/ {{ r.precio_unitario }}</td>
+                    <td style="text-align: right; display: flex; gap: 0.5rem; justify-content: flex-end;">
+                        <a href="{% url 'repuesto_detalle' r.id %}" class="btn" style="padding: 0.4rem 0.6rem; font-size: 0.85rem; background: hsla(215, 20%, 80%, 0.3); color: var(--color-primary-dark);" title="Ver Detalles">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                        <a href="{% url 'repuesto_editar' r.id %}" class="btn" style="padding: 0.4rem 0.6rem; font-size: 0.85rem; background: #e2e8f0; color: var(--color-primary-dark);" title="Editar">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+                        <a href="{% url 'repuesto_eliminar' r.id %}" class="btn" style="padding: 0.4rem 0.6rem; font-size: 0.85rem; background: hsla(0, 84%, 60%, 0.1); color: var(--color-danger);" title="Eliminar">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">No hay repuestos registrados en el inventario.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

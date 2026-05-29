@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mis Órdenes | Darme</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/mobile.css">
+</head>
+<body class="mobile-app">
+    <header class="mobile-header">
+        <h1>Mis Órdenes Asignadas</h1>
+        <a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i></a>
+    </header>
+
+    <div class="mobile-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div style="background: var(--color-success); color: white; padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1rem; font-weight: 600;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if ordenes %}
+            {% for orden in ordenes %}
+            <div class="mobile-card">
+                <span class="mobile-badge" style="background: {% if orden.prioridad == 'URGENTE' %}var(--color-danger){% elif orden.prioridad == 'ALTA' %}var(--color-warning){% else %}#eee{% endif %}; color: {% if orden.prioridad == 'MEDIA' or orden.prioridad == 'BAJA' %}#333{% else %}white{% endif %};">
+                    {{ orden.prioridad }}
+                </span>
+                <div class="mobile-card-title">OT-{{ orden.codigo }}</div>
+                <p style="margin: 0.5rem 0; font-size: 0.95rem;">
+                    <strong>Vehículo:</strong> {{ orden.vehiculo.placa|default:"S/P" }} - {{ orden.vehiculo.marca }} {{ orden.vehiculo.modelo }} <br>
+                    <span style="color: var(--text-muted); font-size: 0.85rem;">({{ orden.vehiculo.tipo }})</span>
+                </p>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.5rem; background: #f8fafc; padding: 0.5rem; border-radius: var(--radius-sm);">
+                    <div><strong>Creada:</strong><br>{{ orden.fecha_creacion|date:"d/m/Y" }}</div>
+                    <div style="text-align: right;"><strong>Límite:</strong><br>{{ orden.fecha_limite|date:"d/m/Y"|default:"Sin límite" }}</div>
+                </div>
+                <p style="margin: 0.5rem 0; color: var(--text-muted); font-size: 0.9rem;">{{ orden.descripcion }}</p>
+                
+                <div style="margin-top: 1rem; border-top: 1px solid #eee; padding-top: 1rem;">
+                    <a href="{% url 'mobile_reportar_orden' orden.id %}" class="btn-mobile primary" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-list-check"></i> 
+                        {% if orden.estado == 'CREADA' %}Iniciar Trabajo{% else %}Continuar Reporte{% endif %}
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="mobile-card" style="text-align: center; padding: 3rem 1rem;">
+                <i class="fa-solid fa-mug-hot" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                <h3>¡Todo al día!</h3>
+                <p class="text-muted">No tienes órdenes de trabajo pendientes asignadas.</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

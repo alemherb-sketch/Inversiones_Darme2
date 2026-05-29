@@ -1,0 +1,58 @@
+:root {
+  /* HSL Colors: Premium Industrial Theme */
+  --hue-primary: 215;
+  --hue-accent: 38; /* Tractor Yellow / Orange */
+  
+  --color-primary: hsl(var(--hue-primary), 25%, 27%);
+  --color-primary-dark: hsl(var(--hue-primary), 35%, 15%);
+  --color-accent: hsl(var(--hue-accent), 92%, 50%);
+  --color-accent-hover: hsl(var(--hue-accent), 92%, 45%);
+  
+  /* Status Colors */
+  --color-success: hsl(142, 71%, 45%);
+  --color-warning: hsl(35, 92%, 50%);
+  --color-danger: hsl(0, 84%, 60%);
+  --color-info: hsl(200, 90%, 50%);
+  
+  /* Backgrounds & Surfaces */
+  --bg-main: hsl(210, 40%, 98%);
+  --bg-surface: hsl(0, 0%, 100%);
+  --bg-sidebar: var(--color-primary-dark);
+  
+  /* Text */
+  --text-main: hsl(215, 20%, 20%);
+  --text-muted: hsl(215, 10%, 50%);
+  --text-light: hsl(0, 0%, 100%);
+  
+  /* Glassmorphism */
+  --glass-bg: hsla(0, 0%, 100%, 0.8);
+  --glass-border: hsla(215, 20%, 80%, 0.3);
+  
+  /* Shadows & Radius */
+  --shadow-sm: 0 2px 8px hsla(var(--hue-primary), 20%, 20%, 0.05);
+  --shadow-md: 0 4px 16px hsla(var(--hue-primary), 20%, 20%, 0.08);
+  --shadow-lg: 0 12px 32px hsla(var(--hue-primary), 20%, 20%, 0.12);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+  
+  /* Transitions */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Typography */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Dark Mode Variables (Optional/Ready) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-main: hsl(222, 47%, 11%);
+    --bg-surface: hsl(222, 47%, 15%);
+    --text-main: hsl(210, 40%, 98%);
+    --text-muted: hsl(215, 20%, 65%);
+    --glass-bg: hsla(222, 47%, 15%, 0.8);
+    --glass-border: hsla(215, 20%, 50%, 0.2);
+  }
+}

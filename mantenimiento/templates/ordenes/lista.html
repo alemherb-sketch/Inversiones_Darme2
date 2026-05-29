@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Órdenes de Trabajo{% endblock %}
+
+{% block content %}
+<div style="margin-bottom: 2rem;">
+    <a href="{% url 'orden_crear' %}" class="btn btn-primary">
+        <i class="fa-solid fa-plus"></i> Nueva Orden
+    </a>
+</div>
+
+<div class="card">
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Vehículo</th>
+                    <th>Prioridad</th>
+                    <th>Estado</th>
+                    <th>Técnico Asignado</th>
+                    <th>Creación</th>
+                    <th style="text-align: right;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for o in ordenes %}
+                <tr>
+                    <td><strong>OT-{{ o.codigo }}</strong><br><small class="text-muted">{{ o.tipo_mantenimiento }}</small></td>
+                    <td>{{ o.vehiculo.placa }}</td>
+                    <td>
+                        <span class="badge {% if o.prioridad == 'URGENTE' %}danger{% elif o.prioridad == 'ALTA' %}warning{% else %}info{% endif %}">
+                            {{ o.prioridad }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge {% if o.estado == 'COMPLETADA' %}success{% elif o.estado == 'EN_PROCESO' %}warning{% elif o.estado == 'ESPERANDO_REPUESTO' %}danger{% else %}info{% endif %}">
+                            {{ o.get_estado_display }}
+                        </span>
+                    </td>
+                    <td>{{ o.tecnico.username|default:"No asignado" }}</td>
+                    <td>{{ o.fecha_creacion|date:"d/m/Y H:i" }}</td>
+                    <td style="text-align: right; display: flex; gap: 0.5rem; justify-content: flex-end;">
+                        <a href="{% url 'orden_detalle' o.id %}" class="btn" style="padding: 0.4rem 0.6rem; font-size: 0.85rem; background: hsla(215, 20%, 80%, 0.3); color: var(--color-primary-dark);" title="Ver Detalles">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                        <a href="{% url 'orden_editar' o.id %}" class="btn" style="padding: 0.4rem 0.6rem; font-size: 0.85rem; background: #e2e8f0; color: var(--color-primary-dark);" title="Editar">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+                        <a href="{% url 'orden_eliminar' o.id %}" class="btn" style="padding: 0.4rem 0.6rem; font-size: 0.85rem; background: hsla(0, 84%, 60%, 0.1); color: var(--color-danger);">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" style="text-align:center;">No hay órdenes registradas.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

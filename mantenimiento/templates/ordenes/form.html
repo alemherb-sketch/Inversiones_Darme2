@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block page_title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 900px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <h3 style="margin-bottom: 1.5rem; color: var(--color-primary); border-bottom: 2px solid var(--glass-border); padding-bottom: 0.5rem;">
+            1. Datos de la Orden
+        </h3>
+        
+        <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+            {% for field in form %}
+                <div class="form-group" {% if field.name == 'descripcion' or field.name == 'reporte_trabajos' %}style="grid-column: 1 / -1;"{% endif %}>
+                    <label class="form-label">
+                        <i class="fa-solid fa-circle-dot" style="color: var(--color-accent); font-size: 0.6rem;"></i> 
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="text-muted" style="display: block; margin-top: 0.25rem;">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% if field.errors %}
+                        <div style="color: var(--color-danger); font-size: 0.85rem; margin-top: 0.25rem;">
+                            {{ field.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <h3 style="margin-top: 2rem; margin-bottom: 1.5rem; color: var(--color-primary); border-bottom: 2px solid var(--glass-border); padding-bottom: 0.5rem;">
+            2. Checklist del Técnico (Inspección)
+        </h3>
+        
+        <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+            {% for field in checklist %}
+                {% if field.name != 'observaciones' %}
+                <div class="form-group" style="display: flex; align-items: center; gap: 0.75rem; background: #f8fafc; padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-border);">
+                    <div style="transform: scale(1.2);">{{ field }}</div>
+                    <label style="margin: 0; font-weight: 600; color: var(--text-main); cursor: pointer;" for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+                </div>
+                {% endif %}
+            {% endfor %}
+            <div class="form-group" style="grid-column: 1 / -1; margin-top: 1rem;">
+                <label class="form-label">
+                    <i class="fa-solid fa-circle-dot" style="color: var(--color-accent); font-size: 0.6rem;"></i> 
+                    Observaciones del Checklist
+                </label>
+                {{ checklist.observaciones }}
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--glass-border); display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-save"></i> Guardar
+            </button>
+            <a href="{% url 'orden_lista' %}" class="btn" style="background: #e2e8f0; color: var(--text-main);">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

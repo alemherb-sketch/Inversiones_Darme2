@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block page_title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 1000px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <h3 style="margin-bottom: 1rem; color: var(--color-primary); border-bottom: 2px solid var(--glass-border); padding-bottom: 0.5rem;">1. Datos Básicos</h3>
+        <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+            {% for field in form %}
+                {% if field.name in 'placa,tipo,marca,modelo,anio,placa_anterior,numero_serie,numero_vin,numero_motor,color,propietarios,estado,horometro_actual,odometro_actual' %}
+                    <div class="form-group" {% if field.name == 'propietarios' %}style="grid-column: 1 / -1;"{% endif %}>
+                        <label class="form-label">
+                            <i class="fa-solid fa-circle-dot" style="color: var(--color-accent); font-size: 0.6rem;"></i> 
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small class="text-muted" style="display:block; margin-top:0.25rem;">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div style="color: var(--color-danger); font-size: 0.85rem; margin-top: 0.25rem;">{{ field.errors }}</div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class="tabs-container" style="margin-top: 2rem; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--radius-md); padding: 1.5rem;">
+            <div class="tabs-header">
+                <button type="button" class="tab-btn active" onclick="switchTab('tecnica')" id="btn-tecnica">
+                    <i class="fa-solid fa-gears"></i> Información Técnica
+                </button>
+                <button type="button" class="tab-btn" onclick="switchTab('registral')" id="btn-registral">
+                    <i class="fa-solid fa-file-contract"></i> Información Registral
+                </button>
+            </div>
+            
+            <div id="tab-tecnica" class="tab-content">
+                <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+                    {% for field in form %}
+                        {% if field.name in 'categoria,anio_fabricacion,carroceria,potencia,forma_rodaje,combustible,asientos,pasajeros,ruedas,ejes,cilindros,longitud,altura,ancho,cilindrada,peso_bruto,peso_neto,carga_util' %}
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fa-solid fa-circle-dot" style="color: var(--color-accent); font-size: 0.6rem;"></i> 
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div style="color: var(--color-danger); font-size: 0.85rem; margin-top: 0.25rem;">{{ field.errors }}</div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div id="tab-registral" class="tab-content" style="display: none;">
+                <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                    {% for field in form %}
+                        {% if field.name in 'partida_registral,dua_dam,titulo,fecha_titulo' %}
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fa-solid fa-circle-dot" style="color: var(--color-accent); font-size: 0.6rem;"></i> 
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div style="color: var(--color-danger); font-size: 0.85rem; margin-top: 0.25rem;">{{ field.errors }}</div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 2rem; border-top: 1px solid var(--glass-border); padding-top: 1.5rem; display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i> Guardar Vehículo
+            </button>
+            <a href="{% url 'vehiculo_lista' %}" class="btn" style="background: hsla(215, 20%, 80%, 0.5); color: var(--text-main);">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<script>
+function switchTab(tabId) {
+    // Ocultar todos los contenidos
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+    
+    // Quitar clase active de todos los botones
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    
+    // Mostrar contenido activo y agregar clase al botón
+    document.getElementById('tab-' + tabId).style.display = 'block';
+    document.getElementById('btn-' + tabId).classList.add('active');
+}
+</script>
+{% endblock %}
