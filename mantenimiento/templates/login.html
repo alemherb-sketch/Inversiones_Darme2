@@ -14,7 +14,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, var(--bg-main) 0%, hsla(var(--hue-primary), 30%, 90%, 1) 100%);
+            background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-surface) 100%);
         }
         .login-container {
             width: 100%;
@@ -32,7 +32,7 @@
         }
         .logo-header h1 {
             font-size: 1.75rem;
-            color: var(--color-primary-dark);
+            color: var(--text-main);
             font-weight: 800;
         }
     </style>
@@ -71,7 +71,7 @@
                 </button>
                 
                 <div style="text-align: center; margin-top: 1.5rem;">
-                    <a href="{% url 'mobile_login' %}" style="color: var(--color-primary); font-size: 0.9rem; font-weight: 600;">
+                    <a href="{% url 'mobile_login' %}" style="color: var(--text-main); font-size: 0.9rem; font-weight: 600;">
                         <i class="fa-solid fa-mobile-screen"></i> Ir al Portal de Técnicos
                     </a>
                 </div>
