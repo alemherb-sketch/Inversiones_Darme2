@@ -1,6 +1,57 @@
-@import 'variables.css';
+/* ===== VARIABLES (embedded, no @import) ===== */
+:root {
+  --hue-primary: 215;
+  --hue-accent: 38;
+  --color-primary: hsl(215, 25%, 27%);
+  --color-primary-dark: hsl(215, 35%, 15%);
+  --color-accent: hsl(38, 92%, 50%);
+  --color-accent-hover: hsl(38, 92%, 45%);
+  --color-success: hsl(142, 71%, 45%);
+  --color-warning: hsl(35, 92%, 50%);
+  --color-danger: hsl(0, 84%, 60%);
+  --color-info: hsl(200, 90%, 50%);
+  --bg-main: hsl(210, 40%, 98%);
+  --bg-surface: hsl(0, 0%, 100%);
+  --bg-sidebar: hsl(215, 35%, 15%);
+  --text-main: hsl(215, 20%, 20%);
+  --text-muted: hsl(215, 10%, 50%);
+  --text-light: hsl(0, 0%, 100%);
+  --glass-bg: hsla(0, 0%, 100%, 0.8);
+  --glass-border: hsla(215, 20%, 80%, 0.3);
+  --shadow-sm: 0 2px 8px hsla(215, 20%, 20%, 0.05);
+  --shadow-md: 0 4px 16px hsla(215, 20%, 20%, 0.08);
+  --shadow-lg: 0 12px 32px hsla(215, 20%, 20%, 0.12);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
-/* Mobile Native App Reset */
+  /* Mobile-specific */
+  --mobile-input-bg: #f8fafc;
+  --mobile-input-border: #d1d5db;
+  --mobile-card-border: #e2e8f0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-main: hsl(222, 47%, 11%);
+    --bg-surface: hsl(222, 40%, 18%);
+    --text-main: hsl(210, 40%, 96%);
+    --text-muted: hsl(215, 20%, 65%);
+    --glass-bg: hsla(222, 40%, 20%, 0.9);
+    --glass-border: hsla(215, 20%, 40%, 0.4);
+    --color-primary: hsl(215, 40%, 45%);
+
+    --mobile-input-bg: hsl(222, 40%, 22%);
+    --mobile-input-border: hsl(215, 20%, 35%);
+    --mobile-card-border: hsl(215, 20%, 30%);
+  }
+}
+
+/* ===== Mobile Native App Reset ===== */
 body.mobile-app {
     font-family: var(--font-family);
     background-color: var(--bg-main);
@@ -9,11 +60,11 @@ body.mobile-app {
     margin: 0;
     padding: 0;
     -webkit-tap-highlight-color: transparent;
-    display: block; /* override desktop flex */
+    display: block;
     min-height: 100vh;
 }
 
-/* Mobile Header */
+/* ===== Mobile Header ===== */
 .mobile-header {
     background-color: var(--color-primary-dark);
     color: white;
@@ -31,6 +82,7 @@ body.mobile-app {
     margin: 0;
     font-size: 1.25rem;
     font-weight: 600;
+    color: white;
 }
 
 .mobile-header a {
@@ -39,30 +91,30 @@ body.mobile-app {
     padding: 0.5rem;
 }
 
-/* Mobile Container */
+/* ===== Mobile Container ===== */
 .mobile-container {
     padding: 1rem;
-    padding-bottom: 5rem; /* space for bottom nav or just breathing room */
+    padding-bottom: 5rem;
 }
 
-/* Mobile Cards */
+/* ===== Mobile Cards ===== */
 .mobile-card {
     background: var(--bg-surface);
     border-radius: var(--radius-md);
     padding: 1rem;
     margin-bottom: 1rem;
     box-shadow: var(--shadow-sm);
-    border: 1px solid var(--glass-border);
+    border: 1px solid var(--mobile-card-border);
 }
 
 .mobile-card-title {
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
-    color: var(--color-primary);
+    color: var(--color-accent);
 }
 
-/* Touch-friendly Buttons */
+/* ===== Touch-friendly Buttons ===== */
 .btn-mobile {
     display: flex;
     width: 100%;
@@ -76,19 +128,26 @@ body.mobile-app {
     font-size: 1.1rem;
     cursor: pointer;
     margin-bottom: 1rem;
+    font-family: var(--font-family);
+    text-decoration: none;
+    transition: var(--transition-fast);
 }
 
 .btn-mobile.primary { background-color: var(--color-primary); color: white; }
 .btn-mobile.accent { background-color: var(--color-accent); color: white; }
 .btn-mobile.success { background-color: var(--color-success); color: white; }
 
-/* Custom Checkbox (Toggle Switch style for mobile) */
+.btn-mobile.primary:active { transform: scale(0.97); }
+.btn-mobile.accent:active { transform: scale(0.97); }
+.btn-mobile.success:active { transform: scale(0.97); }
+
+/* ===== Toggle Switch ===== */
 .toggle-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem 0;
-    border-bottom: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--mobile-card-border);
 }
 
 .toggle-item:last-child {
@@ -98,6 +157,7 @@ body.mobile-app {
 .toggle-label {
     font-weight: 500;
     font-size: 1rem;
+    color: var(--text-main);
 }
 
 /* iOS style switch */
@@ -106,6 +166,7 @@ body.mobile-app {
     display: inline-block;
     width: 50px;
     height: 28px;
+    flex-shrink: 0;
 }
 .switch input { 
     opacity: 0;
@@ -116,7 +177,7 @@ body.mobile-app {
     position: absolute;
     cursor: pointer;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #ccc;
+    background-color: #555;
     transition: .4s;
     border-radius: 34px;
 }
@@ -138,19 +199,33 @@ input:checked + .slider:before {
     transform: translateX(22px);
 }
 
-/* Mobile Inputs */
+/* ===== Mobile Inputs ===== */
 .mobile-input {
     width: 100%;
     padding: 1rem;
-    border: 1px solid var(--glass-border);
+    border: 2px solid var(--mobile-input-border);
     border-radius: var(--radius-md);
     font-size: 1rem;
+    font-family: var(--font-family);
     margin-top: 0.5rem;
-    background: var(--bg-surface);
+    background: var(--mobile-input-bg);
     color: var(--text-main);
+    transition: border-color 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
-/* Add Parts Section */
+.mobile-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px hsla(38, 92%, 50%, 0.2);
+}
+
+.mobile-input::placeholder {
+    color: var(--text-muted);
+}
+
+/* ===== Add Parts Section ===== */
 .add-part-row {
     display: flex;
     gap: 0.5rem;
@@ -161,24 +236,55 @@ input:checked + .slider:before {
     flex-grow: 1;
     padding: 1rem;
     border-radius: var(--radius-md);
-    border: 1px solid var(--glass-border);
-    background: var(--bg-surface);
+    border: 2px solid var(--mobile-input-border);
+    background: var(--mobile-input-bg);
     color: var(--text-main);
+    font-family: var(--font-family);
+    font-size: 0.9rem;
+    -webkit-appearance: none;
+    appearance: none;
+}
+.add-part-row select:focus {
+    outline: none;
+    border-color: var(--color-accent);
 }
 .add-part-row input[type="number"] {
     width: 80px;
     padding: 1rem;
     border-radius: var(--radius-md);
-    border: 1px solid var(--glass-border);
+    border: 2px solid var(--mobile-input-border);
     text-align: center;
-    background: var(--bg-surface);
+    background: var(--mobile-input-bg);
+    color: var(--text-main);
+    font-family: var(--font-family);
+    -webkit-appearance: none;
+    appearance: none;
+}
+.add-part-row input[type="number"]:focus {
+    outline: none;
+    border-color: var(--color-accent);
+}
+
+/* ===== Mobile Badge ===== */
+.mobile-badge {
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 700;
+    float: right;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+}
+
+/* ===== Mobile Labels ===== */
+.mobile-card label {
     color: var(--text-main);
 }
 
-.mobile-badge {
-    padding: 0.25rem 0.5rem;
-    border-radius: var(--radius-sm);
-    font-size: 0.8rem;
-    font-weight: 600;
-    float: right;
+.mobile-card strong {
+    color: var(--text-main);
+}
+
+.mobile-card h2 {
+    color: var(--color-accent);
 }

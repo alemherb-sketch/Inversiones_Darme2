@@ -6,24 +6,45 @@
     <title>Acceso Técnicos | Darme</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/css/mobile.css?v=2.0">
+    <link rel="stylesheet" href="/static/css/mobile.css?v=3.0">
     <style>
-        body {
+        body.mobile-app {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
-            background: var(--bg-main);
+            padding: 1.5rem;
         }
         .login-card {
             width: 100%;
             max-width: 400px;
             text-align: center;
+            padding: 2rem 1.5rem;
         }
         .login-logo {
-            font-size: 3rem;
-            color: var(--color-primary);
-            margin-bottom: 1rem;
+            font-size: 3.5rem;
+            color: var(--color-accent);
+            margin-bottom: 0.75rem;
+        }
+        .login-card h1 {
+            color: var(--text-main);
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+        .login-subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+        .login-card label {
+            display: block;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
         }
     </style>
 </head>
@@ -32,25 +53,26 @@
         <div class="login-logo">
             <i class="fa-solid fa-truck-monster"></i>
         </div>
-        <h1 style="margin-bottom: 2rem;">Acceso Técnicos</h1>
+        <h1>Acceso Técnicos</h1>
+        <p class="login-subtitle">Inversiones Darme</p>
         
         {% if form.errors %}
-            <div style="color: var(--color-danger); margin-bottom: 1rem; font-weight: 600;">
-                Usuario o contraseña incorrectos.
+            <div style="color: var(--color-danger); background: hsla(0, 84%, 60%, 0.1); padding: 0.75rem; border-radius: var(--radius-sm); margin-bottom: 1rem; font-weight: 600; font-size: 0.9rem;">
+                <i class="fa-solid fa-circle-exclamation"></i> Usuario o contraseña incorrectos.
             </div>
         {% endif %}
         
         <form method="post">
             {% csrf_token %}
-            <div style="margin-bottom: 1rem; text-align: left;">
-                <label style="font-weight: 600;">Usuario</label>
-                <input type="text" name="username" class="mobile-input" required autofocus>
+            <div style="margin-bottom: 1.25rem; text-align: left;">
+                <label>Usuario</label>
+                <input type="text" name="username" class="mobile-input" placeholder="Ingrese su usuario" required autofocus style="margin-top: 0.25rem;">
             </div>
             <div style="margin-bottom: 2rem; text-align: left;">
-                <label style="font-weight: 600;">Contraseña</label>
-                <input type="password" name="password" class="mobile-input" required>
+                <label>Contraseña</label>
+                <input type="password" name="password" class="mobile-input" placeholder="••••••••" required style="margin-top: 0.25rem;">
             </div>
-            <button type="submit" class="btn-mobile primary">
+            <button type="submit" class="btn-mobile accent" style="margin-bottom: 0; font-size: 1.15rem; padding: 1.1rem;">
                 <i class="fa-solid fa-right-to-bracket"></i> Ingresar a Mis Órdenes
             </button>
         </form>

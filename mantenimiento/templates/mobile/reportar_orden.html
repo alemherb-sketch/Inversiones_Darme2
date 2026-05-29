@@ -6,7 +6,7 @@
     <title>Reportar OT-{{ orden.codigo }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/static/css/mobile.css?v=2.0">
+    <link rel="stylesheet" href="/static/css/mobile.css?v=3.0">
 </head>
 <body class="mobile-app">
     <header class="mobile-header">
@@ -19,7 +19,7 @@
         {% if messages %}
             {% for message in messages %}
                 <div style="background: var(--color-success); color: white; padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1rem; font-weight: 600;">
-                    {{ message }}
+                    <i class="fa-solid fa-circle-check"></i> {{ message }}
                 </div>
             {% endfor %}
         {% endif %}
@@ -27,6 +27,7 @@
         <form method="post" id="reportForm">
             {% csrf_token %}
             
+            <!-- CHECKLIST -->
             <div class="mobile-card">
                 <h2 class="mobile-card-title"><i class="fa-solid fa-clipboard-check"></i> Checklist de Inspección</h2>
                 
@@ -43,25 +44,24 @@
                 {% endfor %}
                 
                 <div style="margin-top: 1rem;">
-                    <label style="font-weight: 500;">Observaciones del Checklist:</label>
+                    <label style="font-weight: 600; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px;">Observaciones del Checklist:</label>
                     <textarea name="{{ checklist.observaciones.html_name }}" class="mobile-input" rows="2">{{ checklist.observaciones.value|default_if_none:"" }}</textarea>
                 </div>
             </div>
 
+            <!-- REPUESTOS -->
             <div class="mobile-card">
                 <h2 class="mobile-card-title"><i class="fa-solid fa-screwdriver-wrench"></i> Repuestos Utilizados</h2>
                 
-                <!-- Repuestos ya usados (solo vista) -->
                 {% if orden.repuestos_usados.exists %}
-                <div style="margin-bottom: 1rem; padding: 0.5rem; background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-sm);">
-                    <p style="font-size: 0.85rem; color: var(--color-primary); margin-bottom: 0.5rem; font-weight: 600;">YA REGISTRADOS:</p>
+                <div style="margin-bottom: 1rem; padding: 0.75rem; background: var(--mobile-input-bg); border: 1px solid var(--mobile-input-border); border-radius: var(--radius-sm);">
+                    <p style="font-size: 0.8rem; color: var(--color-accent); margin-bottom: 0.5rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px;">Ya Registrados:</p>
                     {% for ru in orden.repuestos_usados.all %}
-                        <div style="font-size: 0.9rem; padding: 0.25rem 0;">• {{ ru.cantidad }}x {{ ru.repuesto.nombre }}</div>
+                        <div style="font-size: 0.9rem; padding: 0.25rem 0; color: var(--text-main);">• {{ ru.cantidad }}x {{ ru.repuesto.nombre }}</div>
                     {% endfor %}
                 </div>
                 {% endif %}
 
-                <!-- Agregar nuevos repuestos -->
                 <div id="partsContainer">
                     <div class="add-part-row">
                         <select name="repuesto_id_1" class="mobile-input" style="margin-top: 0;" onchange="toggleRequired(this, 'cantidad_1')">
@@ -74,36 +74,37 @@
                     </div>
                 </div>
                 
-                <button type="button" class="btn-mobile" style="background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.5rem; font-size: 1rem;" onclick="addPartRow()">
+                <button type="button" class="btn-mobile" style="background: var(--mobile-input-bg); border: 2px solid var(--mobile-input-border); color: var(--text-main); padding: 0.65rem; font-size: 0.95rem;" onclick="addPartRow()">
                     <i class="fa-solid fa-plus"></i> Añadir Otro Repuesto
                 </button>
             </div>
 
+            <!-- REPORTE -->
             <div class="mobile-card">
                 <h2 class="mobile-card-title"><i class="fa-solid fa-file-signature"></i> Reporte de Trabajo</h2>
                 <div style="margin-bottom: 1rem;">
-                    <label style="font-weight: 500;">Trabajos Realizados:</label>
+                    <label style="font-weight: 600; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px;">Trabajos Realizados:</label>
                     <textarea name="reporte_trabajos" class="mobile-input" rows="3" required placeholder="Describe las reparaciones hechas...">{{ orden.reporte_trabajos|default_if_none:"" }}</textarea>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                     <div>
-                        <label style="font-weight: 500; font-size: 0.85rem;">Horómetro:</label>
+                        <label style="font-weight: 600; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px;">Horómetro:</label>
                         <input type="number" step="0.1" name="horometro_registro" class="mobile-input" value="{{ horometro_str }}" placeholder="Ej: {{ horometro_actual_str }}" required>
                     </div>
                     <div>
-                        <label style="font-weight: 500; font-size: 0.85rem;">Odómetro:</label>
+                        <label style="font-weight: 600; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px;">Odómetro:</label>
                         <input type="number" step="0.1" name="odometro_registro" class="mobile-input" value="{{ odometro_str }}" placeholder="Ej: {{ odometro_actual_str }}">
                     </div>
                 </div>
                 
                 <div style="margin-bottom: 1rem;">
-                    <label style="font-weight: 500;">Tiempo Invertido (Horas):</label>
+                    <label style="font-weight: 600; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px;">Tiempo Invertido (Horas):</label>
                     <input type="number" step="0.5" name="tiempo_trabajado" class="mobile-input" value="{{ tiempo_str }}" placeholder="Ej: 2.5" required>
                 </div>
 
                 <div style="margin-bottom: 1rem;">
-                    <label style="font-weight: 500;">Estado de la Orden:</label>
+                    <label style="font-weight: 600; font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px;">Estado de la Orden:</label>
                     <select name="estado" class="mobile-input">
                         {% for value, label in estados %}
                             <option value="{{ value }}" {% if orden.estado == value %}selected{% endif %}>
@@ -114,12 +115,13 @@
                 </div>
             </div>
 
-            <div style="display: flex; gap: 0.5rem;">
+            <!-- BOTONES -->
+            <div style="display: flex; gap: 0.75rem;">
                 <button type="submit" name="accion" value="guardar" class="btn-mobile primary" style="padding: 1.25rem; flex: 1;">
-                    <i class="fa-solid fa-floppy-disk"></i> Guardar Progreso
+                    <i class="fa-solid fa-floppy-disk"></i> Guardar
                 </button>
-                <button type="submit" name="accion" value="completar" class="btn-mobile" style="padding: 1.25rem; flex: 1; background: var(--color-success); color: white; border: none;" onclick="return confirm('¿Seguro que deseas marcar esta orden como COMPLETADA?');">
-                    <i class="fa-solid fa-check-double"></i> COMPLETAR ORDEN
+                <button type="submit" name="accion" value="completar" class="btn-mobile success" style="padding: 1.25rem; flex: 1; border: none;" onclick="return confirm('¿Seguro que deseas marcar esta orden como COMPLETADA?');">
+                    <i class="fa-solid fa-check-double"></i> COMPLETAR
                 </button>
             </div>
 
