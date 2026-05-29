@@ -142,11 +142,12 @@ input:checked + .slider:before {
 .mobile-input {
     width: 100%;
     padding: 1rem;
-    border: 1px solid #ddd;
+    border: 1px solid var(--glass-border);
     border-radius: var(--radius-md);
     font-size: 1rem;
     margin-top: 0.5rem;
     background: var(--bg-surface);
+    color: var(--text-main);
 }
 
 /* Add Parts Section */
@@ -160,14 +161,18 @@ input:checked + .slider:before {
     flex-grow: 1;
     padding: 1rem;
     border-radius: var(--radius-md);
-    border: 1px solid #ddd;
+    border: 1px solid var(--glass-border);
+    background: var(--bg-surface);
+    color: var(--text-main);
 }
 .add-part-row input[type="number"] {
     width: 80px;
     padding: 1rem;
     border-radius: var(--radius-md);
-    border: 1px solid #ddd;
+    border: 1px solid var(--glass-border);
     text-align: center;
+    background: var(--bg-surface);
+    color: var(--text-main);
 }
 
 .mobile-badge {

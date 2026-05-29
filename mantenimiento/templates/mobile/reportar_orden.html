@@ -53,8 +53,8 @@
                 
                 <!-- Repuestos ya usados (solo vista) -->
                 {% if orden.repuestos_usados.exists %}
-                <div style="margin-bottom: 1rem; padding: 0.5rem; background: #f9f9f9; border-radius: var(--radius-sm);">
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 600;">YA REGISTRADOS:</p>
+                <div style="margin-bottom: 1rem; padding: 0.5rem; background: var(--bg-surface); border: 1px solid var(--glass-border); border-radius: var(--radius-sm);">
+                    <p style="font-size: 0.85rem; color: var(--color-primary); margin-bottom: 0.5rem; font-weight: 600;">YA REGISTRADOS:</p>
                     {% for ru in orden.repuestos_usados.all %}
                         <div style="font-size: 0.9rem; padding: 0.25rem 0;">• {{ ru.cantidad }}x {{ ru.repuesto.nombre }}</div>
                     {% endfor %}
@@ -74,7 +74,7 @@
                     </div>
                 </div>
                 
-                <button type="button" class="btn-mobile" style="background: #eee; color: #333; padding: 0.5rem; font-size: 1rem;" onclick="addPartRow()">
+                <button type="button" class="btn-mobile" style="background: var(--glass-bg); border: 1px solid var(--glass-border); color: var(--text-main); padding: 0.5rem; font-size: 1rem;" onclick="addPartRow()">
                     <i class="fa-solid fa-plus"></i> Añadir Otro Repuesto
                 </button>
             </div>
